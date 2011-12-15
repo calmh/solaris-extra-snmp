@@ -3,28 +3,28 @@ under Solaris. It's known to be compatible with Solaris 11 Express and Solaris 1
 When deployed, it provides the following additional information:
 
     SNMPv2-SMI::enterprises.25359.1.2.1.0 = STRING: "ZFS ARC size"
-    SNMPv2-SMI::enterprises.25359.1.2.2.0 = Gauge32: 3855140
+    SNMPv2-SMI::enterprises.25359.1.2.2.0 = Gauge32: 4199201
     SNMPv2-SMI::enterprises.25359.1.2.3.0 = STRING: "KB"
     SNMPv2-SMI::enterprises.25359.1.3.1.0 = STRING: "ZFS ARC hits"
-    SNMPv2-SMI::enterprises.25359.1.3.2.0 = Counter32: 525804554
+    SNMPv2-SMI::enterprises.25359.1.3.2.0 = Counter32: 530013741
     SNMPv2-SMI::enterprises.25359.1.3.3.0 = STRING: "number"
     SNMPv2-SMI::enterprises.25359.1.4.1.0 = STRING: "ZFS ARC misses"
-    SNMPv2-SMI::enterprises.25359.1.4.2.0 = Counter32: 16839622
+    SNMPv2-SMI::enterprises.25359.1.4.2.0 = Counter32: 16844409
     SNMPv2-SMI::enterprises.25359.1.4.3.0 = STRING: "number"
     SNMPv2-SMI::enterprises.25359.1.5.1.0 = STRING: "ZFS read bytes"
-    SNMPv2-SMI::enterprises.25359.1.5.2.0 = Counter32: 717075497
+    SNMPv2-SMI::enterprises.25359.1.5.2.0 = Counter32: 721993291
     SNMPv2-SMI::enterprises.25359.1.5.3.0 = STRING: "KB"
     SNMPv2-SMI::enterprises.25359.1.6.1.0 = STRING: "ZFS readdir bytes"
-    SNMPv2-SMI::enterprises.25359.1.6.2.0 = Counter32: 5622970
+    SNMPv2-SMI::enterprises.25359.1.6.2.0 = Counter32: 5674107
     SNMPv2-SMI::enterprises.25359.1.6.3.0 = STRING: "KB"
     SNMPv2-SMI::enterprises.25359.1.7.1.0 = STRING: "ZFS write bytes"
-    SNMPv2-SMI::enterprises.25359.1.7.2.0 = Counter32: 540218951
+    SNMPv2-SMI::enterprises.25359.1.7.2.0 = Counter32: 541861694
     SNMPv2-SMI::enterprises.25359.1.7.3.0 = STRING: "KB"
     SNMPv2-SMI::enterprises.25359.1.8.1.0 = STRING: "ZFS L2ARC hits"
     SNMPv2-SMI::enterprises.25359.1.8.2.0 = Counter32: 0
     SNMPv2-SMI::enterprises.25359.1.8.3.0 = STRING: "number"
     SNMPv2-SMI::enterprises.25359.1.9.1.0 = STRING: "ZFS L2ARC misses"
-    SNMPv2-SMI::enterprises.25359.1.9.2.0 = Counter32: 16839622
+    SNMPv2-SMI::enterprises.25359.1.9.2.0 = Counter32: 16844409
     SNMPv2-SMI::enterprises.25359.1.9.3.0 = STRING: "number"
     SNMPv2-SMI::enterprises.25359.1.10.1.0 = STRING: "ZFS L2ARC read bytes"
     SNMPv2-SMI::enterprises.25359.1.10.2.0 = Counter32: 0
@@ -32,6 +32,12 @@ When deployed, it provides the following additional information:
     SNMPv2-SMI::enterprises.25359.1.11.1.0 = STRING: "ZFS L2ARC write bytes"
     SNMPv2-SMI::enterprises.25359.1.11.2.0 = Counter32: 0
     SNMPv2-SMI::enterprises.25359.1.11.3.0 = STRING: "KB"
+    SNMPv2-SMI::enterprises.25359.1.12.1.0 = STRING: "ZFS ARC data size"
+    SNMPv2-SMI::enterprises.25359.1.12.2.0 = Gauge32: 4000223
+    SNMPv2-SMI::enterprises.25359.1.12.3.0 = STRING: "KB"
+    SNMPv2-SMI::enterprises.25359.1.13.1.0 = STRING: "ZFS ARC metadata size"
+    SNMPv2-SMI::enterprises.25359.1.13.2.0 = Gauge32: 199013
+    SNMPv2-SMI::enterprises.25359.1.13.3.0 = STRING: "KB"
 
 With this information, you can graph ZFS ARC size and hit rate, ZFS IO rate and
 ZFS L2ARC hit rate and IO rate. To use, drop the scripts in for example
