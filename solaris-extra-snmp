@@ -26,6 +26,18 @@ def zfs_readdir(oid):
 def zfs_write(oid):
     return ('counter', kstat("unix:0:vopstats_zfs:write_bytes") / 1024 % 2**32) # 32 bit KB counter
 
+def zfs_l2arc_hits(oid):
+    return ('counter', kstat("zfs:0:arcstats:l2_hits") % 2**32) # 32 bit counter
+
+def zfs_l2arc_misses(oid):
+    return ('counter', kstat("zfs:0:arcstats:l2_misses") % 2**32) # 32 bit counter
+
+def zfs_l2arc_write(oid):
+    return ('counter', kstat("zfs:0:arcstats:l2_write_bytes") / 1024 % 2**32) # 32 bit KB counter
+
+def zfs_l2arc_read(oid):
+    return ('counter', kstat("zfs:0:arcstats:l2_read_bytes") / 1024 % 2**32) # 32 bit KB counter
+
 # Returns the value of the first found temperature sensor
 def temperature(oid):
     output = commands.getoutput("ipmitool sensor")
@@ -76,7 +88,31 @@ result = [
     ( BASE_OID + '.7.1.0', ('string', 'ZFS write bytes')),
     ( BASE_OID + '.7.2.0', zfs_write),
     ( BASE_OID + '.7.3.0', ('string', 'KB')),
+
+    ( BASE_OID + '.8.1.0', ('string', 'ZFS L2ARC hits')),
+    ( BASE_OID + '.8.2.0', zfs_l2arc_hits),
+    ( BASE_OID + '.8.3.0', ('string', 'number')),
+
+    ( BASE_OID + '.9.1.0', ('string', 'ZFS L2ARC misses')),
+    ( BASE_OID + '.9.2.0', zfs_l2arc_misses),
+    ( BASE_OID + '.9.3.0', ('string', 'number')),
+
+    ( BASE_OID + '.10.1.0', ('string', 'ZFS L2ARC read bytes')),
+    ( BASE_OID + '.10.2.0', zfs_l2arc_read),
+    ( BASE_OID + '.10.3.0', ('string', 'KB')),
+
+    ( BASE_OID + '.11.1.0', ('string', 'ZFS L2ARC write bytes')),
+    ( BASE_OID + '.11.2.0', zfs_l2arc_write),
+    ( BASE_OID + '.11.3.0', ('string', 'KB')),
 ]
+
+def decompose_oid(oid):
+    return [ int(o) for o in oid.split('.')[1:] ]
+
+def oid_compare(a, b):
+    ad = decompose_oid(a)
+    bd = decompose_oid(b)
+    return cmp(ad, bd)
 
 def printValue(value, oid):
     # If it's a function, call it.
@@ -86,10 +122,9 @@ def printValue(value, oid):
     print value[0]
     print value[1]
 
-result = sorted(result)
-
 operation = sys.argv[1]
 req_oid = sys.argv[2]
+result = sorted(result, key=lambda row: decompose_oid(row[0]))
 
 if operation == '-g':
     for oid, value in result:
@@ -98,7 +133,7 @@ if operation == '-g':
             printValue(value, oid)
 elif operation == '-n':
     for oid, value in result:
-        if oid > req_oid:
+        if oid_compare(oid, req_oid) == 1:
             print oid
             printValue(value, oid)
             break
