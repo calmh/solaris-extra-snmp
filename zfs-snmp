@@ -11,6 +11,12 @@ def kstat(name):
 def zfs_arc_size(oid):
     return ('gauge', kstat("zfs:0:arcstats:size") / 1024) # KB
 
+def zfs_arc_data(oid):
+    return ('gauge', kstat("zfs:0:arcstats:data_size") / 1024) # KB
+
+def zfs_arc_meta(oid):
+    return ('gauge', kstat("zfs:0:arcstats:meta_used") / 1024) # KB
+
 def zfs_arc_hits(oid):
     return ('counter', kstat("zfs:0:arcstats:hits") % 2**32) # 32 bit counter
 
@@ -78,6 +84,14 @@ result = [
     ( BASE_OID + '.11.1.0', ('string', 'ZFS L2ARC write bytes')),
     ( BASE_OID + '.11.2.0', zfs_l2arc_write),
     ( BASE_OID + '.11.3.0', ('string', 'KB')),
+
+    ( BASE_OID + '.12.1.0', ('string', 'ZFS ARC data size')),
+    ( BASE_OID + '.12.2.0', zfs_arc_data),
+    ( BASE_OID + '.12.3.0', ('string', 'KB')),
+
+    ( BASE_OID + '.13.1.0', ('string', 'ZFS ARC metadata size')),
+    ( BASE_OID + '.13.2.0', zfs_arc_meta),
+    ( BASE_OID + '.13.3.0', ('string', 'KB')),
 ]
 
 operation = sys.argv[1]
