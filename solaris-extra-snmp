@@ -1,0 +1,105 @@
+#!/usr/bin/python
+
+BASE_OID = '.1.3.6.1.4.1.25359.1'
+
+import sys, commands, re
+
+def kstat(name):
+    output = commands.getoutput("kstat -p " + name)
+    return int(re.split("\s+", output)[1])
+
+def zfs_arc_size(oid):
+    return ('gauge', kstat("zfs:0:arcstats:size") / 1024) # KB
+
+def zfs_arc_hits(oid):
+    return ('counter', kstat("zfs:0:arcstats:hits") % 2**32) # 32 bit counter
+
+def zfs_arc_misses(oid):
+    return ('counter', kstat("zfs:0:arcstats:misses") % 2**32) # 32 bit counter
+
+def zfs_read(oid):
+    return ('counter', kstat("unix:0:vopstats_zfs:read_bytes") / 1024 % 2**32) # 32 bit KB counter
+
+def zfs_readdir(oid):
+    return ('counter', kstat("unix:0:vopstats_zfs:readdir_bytes") / 1024 % 2**32) # 32 bit KB counter
+
+def zfs_write(oid):
+    return ('counter', kstat("unix:0:vopstats_zfs:write_bytes") / 1024 % 2**32) # 32 bit KB counter
+
+# Returns the value of the first found temperature sensor
+def temperature(oid):
+    output = commands.getoutput("ipmitool sensor")
+    lines = output.split("\n")
+    for line in lines:
+        fields = [ word.strip() for word in line.split("|") ]
+        if len(fields) >= 3 and re.search('degrees', fields[2], re.I):
+            pm = re.match('^([0-9]+)', fields[1])
+            if pm:
+                return ('gauge', int(pm.group(1)))
+    return ('gauge', 0)
+
+# Returns the name of the first found temperature sensor
+def temperature_name(oid):
+    output = commands.getoutput("ipmitool sensor")
+    lines = output.split("\n")
+    for line in lines:
+        fields = [ word.strip() for word in line.split("|") ]
+        if re.search('degrees', fields[2], re.I):
+            return ('string', fields[0])
+    return ('string', 'Unknown temperature sensor')
+
+result = [
+    ( BASE_OID + '.1.1.0', temperature_name),
+    ( BASE_OID + '.1.2.0', temperature),
+    ( BASE_OID + '.1.3.0', ('string', 'Degrees C')),
+
+    ( BASE_OID + '.2.1.0', ('string', 'ZFS ARC size')),
+    ( BASE_OID + '.2.2.0', zfs_arc_size),
+    ( BASE_OID + '.2.3.0', ('string', 'KB')),
+
+    ( BASE_OID + '.3.1.0', ('string', 'ZFS ARC hits')),
+    ( BASE_OID + '.3.2.0', zfs_arc_hits),
+    ( BASE_OID + '.3.3.0', ('string', 'number')),
+
+    ( BASE_OID + '.4.1.0', ('string', 'ZFS ARC misses')),
+    ( BASE_OID + '.4.2.0', zfs_arc_misses),
+    ( BASE_OID + '.4.3.0', ('string', 'number')),
+
+    ( BASE_OID + '.5.1.0', ('string', 'ZFS read bytes')),
+    ( BASE_OID + '.5.2.0', zfs_read),
+    ( BASE_OID + '.5.3.0', ('string', 'KB')),
+
+    ( BASE_OID + '.6.1.0', ('string', 'ZFS readdir bytes')),
+    ( BASE_OID + '.6.2.0', zfs_readdir),
+    ( BASE_OID + '.6.3.0', ('string', 'KB')),
+
+    ( BASE_OID + '.7.1.0', ('string', 'ZFS write bytes')),
+    ( BASE_OID + '.7.2.0', zfs_write),
+    ( BASE_OID + '.7.3.0', ('string', 'KB')),
+]
+
+def printValue(value, oid):
+    # If it's a function, call it.
+    if type(value).__name__ == 'function':
+        value = value(oid)
+    # Otherwise assume it's a two-tuple of type and value.
+    print value[0]
+    print value[1]
+
+result = sorted(result)
+
+operation = sys.argv[1]
+req_oid = sys.argv[2]
+
+if operation == '-g':
+    for oid, value in result:
+        if oid == req_oid:
+            print oid
+            printValue(value, oid)
+elif operation == '-n':
+    for oid, value in result:
+        if oid > req_oid:
+            print oid
+            printValue(value, oid)
+            break
+
