@@ -2,7 +2,7 @@
 
 BASE_OID = '.1.3.6.1.4.1.25359.1'
 
-import sys, commands, re
+import sys, commands, re, snmpresponse
 
 def kstat(name):
     output = commands.getoutput("kstat -p " + name)
@@ -38,33 +38,7 @@ def zfs_l2arc_write(oid):
 def zfs_l2arc_read(oid):
     return ('counter', kstat("zfs:0:arcstats:l2_read_bytes") / 1024 % 2**32) # 32 bit KB counter
 
-# Returns the value of the first found temperature sensor
-def temperature(oid):
-    output = commands.getoutput("ipmitool sensor")
-    lines = output.split("\n")
-    for line in lines:
-        fields = [ word.strip() for word in line.split("|") ]
-        if len(fields) >= 3 and re.search('degrees', fields[2], re.I):
-            pm = re.match('^([0-9]+)', fields[1])
-            if pm:
-                return ('gauge', int(pm.group(1)))
-    return ('gauge', 0)
-
-# Returns the name of the first found temperature sensor
-def temperature_name(oid):
-    output = commands.getoutput("ipmitool sensor")
-    lines = output.split("\n")
-    for line in lines:
-        fields = [ word.strip() for word in line.split("|") ]
-        if re.search('degrees', fields[2], re.I):
-            return ('string', fields[0])
-    return ('string', 'Unknown temperature sensor')
-
 result = [
-    ( BASE_OID + '.1.1.0', temperature_name),
-    ( BASE_OID + '.1.2.0', temperature),
-    ( BASE_OID + '.1.3.0', ('string', 'Degrees C')),
-
     ( BASE_OID + '.2.1.0', ('string', 'ZFS ARC size')),
     ( BASE_OID + '.2.2.0', zfs_arc_size),
     ( BASE_OID + '.2.3.0', ('string', 'KB')),
@@ -106,35 +80,8 @@ result = [
     ( BASE_OID + '.11.3.0', ('string', 'KB')),
 ]
 
-def decompose_oid(oid):
-    return [ int(o) for o in oid.split('.')[1:] ]
-
-def oid_compare(a, b):
-    ad = decompose_oid(a)
-    bd = decompose_oid(b)
-    return cmp(ad, bd)
-
-def printValue(value, oid):
-    # If it's a function, call it.
-    if type(value).__name__ == 'function':
-        value = value(oid)
-    # Otherwise assume it's a two-tuple of type and value.
-    print value[0]
-    print value[1]
-
 operation = sys.argv[1]
 req_oid = sys.argv[2]
-result = sorted(result, key=lambda row: decompose_oid(row[0]))
 
-if operation == '-g':
-    for oid, value in result:
-        if oid == req_oid:
-            print oid
-            printValue(value, oid)
-elif operation == '-n':
-    for oid, value in result:
-        if oid_compare(oid, req_oid) == 1:
-            print oid
-            printValue(value, oid)
-            break
+snmpresponse.respond_to(operation, req_oid, result)
 

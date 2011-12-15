@@ -1,0 +1,39 @@
+#!/usr/bin/python
+
+BASE_OID = '.1.3.6.1.4.1.25359.2'
+
+import sys, commands, re, snmpresponse
+
+# Returns the value of the first found temperature sensor
+def temperature(oid):
+    output = commands.getoutput("ipmitool sensor")
+    lines = output.split("\n")
+    for line in lines:
+        fields = [ word.strip() for word in line.split("|") ]
+        if len(fields) >= 3 and re.search('degrees', fields[2], re.I):
+            pm = re.match('^([0-9]+)', fields[1])
+            if pm:
+                return ('gauge', int(pm.group(1)))
+    return ('gauge', 0)
+
+# Returns the name of the first found temperature sensor
+def temperature_name(oid):
+    output = commands.getoutput("ipmitool sensor")
+    lines = output.split("\n")
+    for line in lines:
+        fields = [ word.strip() for word in line.split("|") ]
+        if re.search('degrees', fields[2], re.I):
+            return ('string', fields[0])
+    return ('string', 'Unknown temperature sensor')
+
+result = [
+    ( BASE_OID + '.1.1.0', temperature_name),
+    ( BASE_OID + '.1.2.0', temperature),
+    ( BASE_OID + '.1.3.0', ('string', 'Degrees C')),
+]
+
+operation = sys.argv[1]
+req_oid = sys.argv[2]
+
+snmpresponse.respond_to(operation, req_oid, result)
+

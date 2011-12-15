@@ -2,9 +2,6 @@ This is a small script to add additional useful variables for SNMP monitoring
 under Solaris. It's known to be compatible with Solaris 11 Express and Solaris 11.
 When deployed, it provides the following additional information:
 
-    SNMPv2-SMI::enterprises.25359.1.1.1.0 = STRING: "System Temp"
-    SNMPv2-SMI::enterprises.25359.1.1.2.0 = Gauge32: 20
-    SNMPv2-SMI::enterprises.25359.1.1.3.0 = STRING: "Degrees C"
     SNMPv2-SMI::enterprises.25359.1.2.1.0 = STRING: "ZFS ARC size"
     SNMPv2-SMI::enterprises.25359.1.2.2.0 = Gauge32: 3855140
     SNMPv2-SMI::enterprises.25359.1.2.3.0 = STRING: "KB"
@@ -36,12 +33,11 @@ When deployed, it provides the following additional information:
     SNMPv2-SMI::enterprises.25359.1.11.2.0 = Counter32: 0
     SNMPv2-SMI::enterprises.25359.1.11.3.0 = STRING: "KB"
 
-With this information, you can graph system temperature, ZFS ARC cache hit
-rate, ZFS IO rate and ZFS L2ARC hit rate and IO rate. To use, drop the script
-in for example /usr/local/bin, add the following to
-/etc/net-snmp/snmp/snmpd.conf:
+With this information, you can graph ZFS ARC size and hit rate, ZFS IO rate and
+ZFS L2ARC hit rate and IO rate. To use, drop the scripts in for example
+/usr/local/bin, add the following to /etc/net-snmp/snmp/snmpd.conf:
 
-    pass .1.3.6.1.4.1.25359.1 /usr/local/bin/solaris-extra-snmp
+    pass .1.3.6.1.4.1.25359.1 /usr/local/bin/zfs-snmp
 
 and restart the net-snmp service. If you don't already use the net-snmp service
 you will need to enable it and set community etc.
