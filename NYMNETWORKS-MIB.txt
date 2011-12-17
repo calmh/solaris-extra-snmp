@@ -36,6 +36,15 @@ zfsFilesystemUsedKB OBJECT-TYPE
 	         "The number of 1 KB blocks that are in use."
 	::= {fs 3}
 
+zfsPoolHealth OBJECT-TYPE
+	SYNTAX	DisplayString
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+	         "The current health of the containing pool, as reported
+		 by zpool status."
+	::= {fs 4}
+
 zfsFilesystemAvailableMB OBJECT-TYPE
 	SYNTAX	GAUGE
 	ACCESS	read-only
