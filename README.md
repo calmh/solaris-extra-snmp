@@ -33,12 +33,18 @@ With this information, you can graph ZFS ARC size and hit rate, ZFS IO rate and
 ZFS L2ARC hit rate and IO rate. Have a look in the MIB or in the source for
 more detailed descriptions of the individual variables.
 
-To use, drop the scripts in for example /usr/local/bin, add the following to
-/etc/net-snmp/snmp/snmpd.conf:
+To use, drop the scripts
+
+    ipmi-snmp
+    snmpresponse.py
+    zfs-snmp
+
+in for example `/usr/local/bin`, add the following to
+`/etc/net-snmp/snmp/snmpd.conf`:
 
     pass .1.3.6.1.4.1.25359.1 /usr/local/bin/zfs-snmp
     pass .1.3.6.1.4.1.25359.2 /usr/local/bin/ipmi-snmp
 
-and restart the net-snmp service. If you don't already use the net-snmp service
-you will need to enable it and set community etc.
+and `svcadm restart net-snmp`. If you don't already use the net-snmp service
+you will need to set community etc at the top of the file and `svcadm enable net-snmp`.
 
