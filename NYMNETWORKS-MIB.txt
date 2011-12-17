@@ -7,10 +7,10 @@ IMPORTS
 
 nymnetworks	OBJECT IDENTIFIER ::= {enterprises 25359}
 
-zfs		OBJECT IDENTIFIER ::= {nymnetworks 1}
-ipmi		OBJECT IDENTIFIER ::= {nymnetworks 2}
+zfs	OBJECT IDENTIFIER ::= {nymnetworks 1}
+ipmi	OBJECT IDENTIFIER ::= {nymnetworks 2}
 
-fs		OBJECT IDENTIFIER ::= {zfs 1}
+fs	OBJECT IDENTIFIER ::= {zfs 1}
 
 zfsFilesystemName OBJECT-TYPE
 	SYNTAX	DisplayString
@@ -40,90 +40,121 @@ zfsFilesystemAvailableMB OBJECT-TYPE
 	SYNTAX	GAUGE
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The number of 1 MB blocks that are available for use.
+		 Useful if zfsFilesystemAvailableKB exceeds a 32 bit
+		 integer."
 	::= {fs 12}
 
 zfsFilesystemUsedMB OBJECT-TYPE
 	SYNTAX	GAUGE
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The number of 1 MB blocks that are in use Useful if
+		 zfsFilesystemUsedKB exceeds a 32 bit integer."
 	::= {fs 13}
 
-arc		OBJECT IDENTIFIER ::= {zfs 2}
+arc	OBJECT IDENTIFIER ::= {zfs 2}
 
 zfsARCSizeKB OBJECT-TYPE
 	SYNTAX	GAUGE
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The current ARC size in KB."
 	::= {arc 1}
 
 zfsARCMetadataSizeKB OBJECT-TYPE
 	SYNTAX	GAUGE
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The amount of ARC space used for metadata storage, in KB."
 	::= {arc 2}
 
 zfsARCDataSizeKB OBJECT-TYPE
 	SYNTAX	GAUGE
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The amount of ARC space used for file data storage, in KB."
 	::= {arc 3}
 
 zfsARCHits OBJECT-TYPE
 	SYNTAX	COUNTER
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The number of ARC accesses that were cache hits."
 	::= {arc 4}
 
 zfsARCMisses OBJECT-TYPE
 	SYNTAX	GAUGE
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The number of ARC accesses that were cache misses."
 	::= {arc 5}
 
-l2arc		OBJECT IDENTIFIER ::= {zfs 3}
+l2arc	OBJECT IDENTIFIER ::= {zfs 3}
 
 zfsL2ARCHits OBJECT-TYPE
 	SYNTAX	COUNTER
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The number of L2ARC accesses that were cache hits."
 	::= {l2arc 1}
 
 zfsL2ARCMisses OBJECT-TYPE
 	SYNTAX	COUNTER
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The number of L2ARC accesses that were cache misses."
 	::= {l2arc 2}
 
 zfsL2ARCReads OBJECT-TYPE
 	SYNTAX	COUNTER
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The number of reads made from L2ARC devices."
 	::= {l2arc 3}
 
 zfsL2ARCWrites OBJECT-TYPE
 	SYNTAX	COUNTER
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The number of writes made to L2ARC devices."
 	::= {l2arc 4}
 
-io		OBJECT IDENTIFIER ::= {zfs 4}
+io	OBJECT IDENTIFIER ::= {zfs 4}
 
 zfsReadKB OBJECT-TYPE
 	SYNTAX	COUNTER
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The amount of file data read from the ZFS filesystem layer, in KB."
 	::= {io 1}
 
 zfsReaddirKB OBJECT-TYPE
 	SYNTAX	COUNTER
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The amount of directory data read from the ZFS filesystem layer, in KB."
 	::= {io 2}
 
 zfsWriteKB OBJECT-TYPE
 	SYNTAX	COUNTER
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The amount of file data written to the ZFS filesystem layer, in KB."
 	::= {io 3}
 
 temperature	OBJECT IDENTIFIER ::= {ipmi 1}
@@ -132,12 +163,16 @@ tempSensorName OBJECT-TYPE
 	SYNTAX	DisplayString
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The name of the designated temperature sensor."
 	::= {temperature 1}
 
 tempSensorValue OBJECT-TYPE
 	SYNTAX	GAUGE
 	ACCESS	read-only
 	STATUS	mandatory
+	DESCRIPTION
+	         "The current value of the designated temperature sensor."
 	::= {temperature 2}
 
 END

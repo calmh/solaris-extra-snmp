@@ -28,8 +28,11 @@ When deployed, it provides the following additional information:
     NYMNETWORKS-MIB::tempSensorValue.0 = Gauge32: 20
 
 With this information, you can graph ZFS ARC size and hit rate, ZFS IO rate and
-ZFS L2ARC hit rate and IO rate. To use, drop the scripts in for example
-/usr/local/bin, add the following to /etc/net-snmp/snmp/snmpd.conf:
+ZFS L2ARC hit rate and IO rate. Have a look in the MIB or in the source for
+more detailed descriptions of the individual variables.
+
+To use, drop the scripts in for example /usr/local/bin, add the following to
+/etc/net-snmp/snmp/snmpd.conf:
 
     pass .1.3.6.1.4.1.25359.1 /usr/local/bin/zfs-snmp
     pass .1.3.6.1.4.1.25359.2 /usr/local/bin/ipmi-snmp
