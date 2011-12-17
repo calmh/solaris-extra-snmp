@@ -37,7 +37,7 @@ zfsFilesystemUsedKB OBJECT-TYPE
 	::= {fs 3}
 
 zfsPoolHealth OBJECT-TYPE
-	SYNTAX	DisplayString
+	SYNTAX	INTEGER { online(1), degraded(2), faulted(3), unknown(4) }
 	ACCESS	read-only
 	STATUS	mandatory
 	DESCRIPTION

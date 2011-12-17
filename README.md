@@ -8,8 +8,8 @@ When deployed, it provides the following additional information:
     NYMNETWORKS-MIB::zfsFilesystemAvailableKB.2 = Gauge32: 22363549
     NYMNETWORKS-MIB::zfsFilesystemUsedKB.1 = Gauge32: 737837527
     NYMNETWORKS-MIB::zfsFilesystemUsedKB.2 = Gauge32: 15827554
-    NYMNETWORKS-MIB::zfsPoolHealth.1 = STRING: "ONLINE"
-    NYMNETWORKS-MIB::zfsPoolHealth.2 = STRING: "ONLINE"
+    NYMNETWORKS-MIB::zfsPoolHealth.1 = INTEGER: online(1)
+    NYMNETWORKS-MIB::zfsPoolHealth.2 = INTEGER: online(1)
     NYMNETWORKS-MIB::zfsFilesystemAvailableMB.1 = Gauge32: 1150303
     NYMNETWORKS-MIB::zfsFilesystemAvailableMB.2 = Gauge32: 21839
     NYMNETWORKS-MIB::zfsFilesystemUsedMB.1 = Gauge32: 720544
