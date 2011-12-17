@@ -29,7 +29,6 @@ def temperature_name(oid):
 result = [
     ( BASE_OID + '.1.1.0', temperature_name),
     ( BASE_OID + '.1.2.0', temperature),
-    ( BASE_OID + '.1.3.0', ('string', 'Degrees C')),
 ]
 
 operation = sys.argv[1]

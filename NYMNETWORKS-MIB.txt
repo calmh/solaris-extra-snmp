@@ -1,0 +1,144 @@
+NYMNETWORKS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+	enterprises FROM RFC1155-SMI
+	OBJECT-TYPE FROM RFC-1212
+	DisplayString FROM RFC-1213;
+
+nymnetworks	OBJECT IDENTIFIER ::= {enterprises 25359}
+
+zfs		OBJECT IDENTIFIER ::= {nymnetworks 1}
+ipmi		OBJECT IDENTIFIER ::= {nymnetworks 2}
+
+fs		OBJECT IDENTIFIER ::= {zfs 1}
+
+zfsFilesystemName OBJECT-TYPE
+	SYNTAX	DisplayString
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+		"The name of the filesystem."
+	::= {fs 1}
+
+zfsFilesystemAvailableKB OBJECT-TYPE
+	SYNTAX	GAUGE
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+	         "The number of 1 KB blocks that are available for use."
+	::= {fs 2}
+
+zfsFilesystemUsedKB OBJECT-TYPE
+	SYNTAX	GAUGE
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+	         "The number of 1 KB blocks that are in use."
+	::= {fs 3}
+
+zfsFilesystemAvailableMB OBJECT-TYPE
+	SYNTAX	GAUGE
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {fs 12}
+
+zfsFilesystemUsedMB OBJECT-TYPE
+	SYNTAX	GAUGE
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {fs 13}
+
+arc		OBJECT IDENTIFIER ::= {zfs 2}
+
+zfsARCSizeKB OBJECT-TYPE
+	SYNTAX	GAUGE
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {arc 1}
+
+zfsARCMetadataSizeKB OBJECT-TYPE
+	SYNTAX	GAUGE
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {arc 2}
+
+zfsARCDataSizeKB OBJECT-TYPE
+	SYNTAX	GAUGE
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {arc 3}
+
+zfsARCHits OBJECT-TYPE
+	SYNTAX	COUNTER
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {arc 4}
+
+zfsARCMisses OBJECT-TYPE
+	SYNTAX	GAUGE
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {arc 5}
+
+l2arc		OBJECT IDENTIFIER ::= {zfs 3}
+
+zfsL2ARCHits OBJECT-TYPE
+	SYNTAX	COUNTER
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {l2arc 1}
+
+zfsL2ARCMisses OBJECT-TYPE
+	SYNTAX	COUNTER
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {l2arc 2}
+
+zfsL2ARCReads OBJECT-TYPE
+	SYNTAX	COUNTER
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {l2arc 3}
+
+zfsL2ARCWrites OBJECT-TYPE
+	SYNTAX	COUNTER
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {l2arc 4}
+
+io		OBJECT IDENTIFIER ::= {zfs 4}
+
+zfsReadKB OBJECT-TYPE
+	SYNTAX	COUNTER
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {io 1}
+
+zfsReaddirKB OBJECT-TYPE
+	SYNTAX	COUNTER
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {io 2}
+
+zfsWriteKB OBJECT-TYPE
+	SYNTAX	COUNTER
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {io 3}
+
+temperature	OBJECT IDENTIFIER ::= {ipmi 1}
+
+tempSensorName OBJECT-TYPE
+	SYNTAX	DisplayString
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {temperature 1}
+
+tempSensorValue OBJECT-TYPE
+	SYNTAX	GAUGE
+	ACCESS	read-only
+	STATUS	mandatory
+	::= {temperature 2}
+
+END
+

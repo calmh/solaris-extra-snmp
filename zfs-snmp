@@ -44,55 +44,45 @@ def zfs_l2arc_write(oid):
 def zfs_l2arc_read(oid):
     return ('counter', kstat("zfs:0:arcstats:l2_read_bytes") / 1024 % 2**32) # 32 bit KB counter
 
+def zfs_pools():
+    return commands.getoutput("zpool list -H -o name").split("\n")
+
+def zfs_used_avail(fs):
+    return [ int(x) / 1024 for x in commands.getoutput("zfs get -Hpo value used,available " + fs).split("\n")]
+
+# nymnetworks     OBJECT IDENTIFIER ::= {enterprises 25359}
+# zfs             OBJECT IDENTIFIER ::= {nymnetworks 1}
+# fs              OBJECT IDENTIFIER ::= {zfs 1}
+# arc             OBJECT IDENTIFIER ::= {zfs 2}
+# l2arc           OBJECT IDENTIFIER ::= {zfs 3}
+# io              OBJECT IDENTIFIER ::= {zfs 4}
+
 result = [
-    ( BASE_OID + '.2.1.0', ('string', 'ZFS ARC size')),
-    ( BASE_OID + '.2.2.0', zfs_arc_size),
-    ( BASE_OID + '.2.3.0', ('string', 'KB')),
+    ( BASE_OID + '.2.1.0', zfs_arc_size),
+    ( BASE_OID + '.2.2.0', zfs_arc_meta),
+    ( BASE_OID + '.2.3.0', zfs_arc_data),
+    ( BASE_OID + '.2.4.0', zfs_arc_hits),
+    ( BASE_OID + '.2.5.0', zfs_arc_misses),
 
-    ( BASE_OID + '.3.1.0', ('string', 'ZFS ARC hits')),
-    ( BASE_OID + '.3.2.0', zfs_arc_hits),
-    ( BASE_OID + '.3.3.0', ('string', 'number')),
+    ( BASE_OID + '.3.1.0', zfs_l2arc_hits),
+    ( BASE_OID + '.3.2.0', zfs_l2arc_misses),
+    ( BASE_OID + '.3.3.0', zfs_l2arc_read),
+    ( BASE_OID + '.3.4.0', zfs_l2arc_write),
 
-    ( BASE_OID + '.4.1.0', ('string', 'ZFS ARC misses')),
-    ( BASE_OID + '.4.2.0', zfs_arc_misses),
-    ( BASE_OID + '.4.3.0', ('string', 'number')),
-
-    ( BASE_OID + '.5.1.0', ('string', 'ZFS read bytes')),
-    ( BASE_OID + '.5.2.0', zfs_read),
-    ( BASE_OID + '.5.3.0', ('string', 'KB')),
-
-    ( BASE_OID + '.6.1.0', ('string', 'ZFS readdir bytes')),
-    ( BASE_OID + '.6.2.0', zfs_readdir),
-    ( BASE_OID + '.6.3.0', ('string', 'KB')),
-
-    ( BASE_OID + '.7.1.0', ('string', 'ZFS write bytes')),
-    ( BASE_OID + '.7.2.0', zfs_write),
-    ( BASE_OID + '.7.3.0', ('string', 'KB')),
-
-    ( BASE_OID + '.8.1.0', ('string', 'ZFS L2ARC hits')),
-    ( BASE_OID + '.8.2.0', zfs_l2arc_hits),
-    ( BASE_OID + '.8.3.0', ('string', 'number')),
-
-    ( BASE_OID + '.9.1.0', ('string', 'ZFS L2ARC misses')),
-    ( BASE_OID + '.9.2.0', zfs_l2arc_misses),
-    ( BASE_OID + '.9.3.0', ('string', 'number')),
-
-    ( BASE_OID + '.10.1.0', ('string', 'ZFS L2ARC read bytes')),
-    ( BASE_OID + '.10.2.0', zfs_l2arc_read),
-    ( BASE_OID + '.10.3.0', ('string', 'KB')),
-
-    ( BASE_OID + '.11.1.0', ('string', 'ZFS L2ARC write bytes')),
-    ( BASE_OID + '.11.2.0', zfs_l2arc_write),
-    ( BASE_OID + '.11.3.0', ('string', 'KB')),
-
-    ( BASE_OID + '.12.1.0', ('string', 'ZFS ARC data size')),
-    ( BASE_OID + '.12.2.0', zfs_arc_data),
-    ( BASE_OID + '.12.3.0', ('string', 'KB')),
-
-    ( BASE_OID + '.13.1.0', ('string', 'ZFS ARC metadata size')),
-    ( BASE_OID + '.13.2.0', zfs_arc_meta),
-    ( BASE_OID + '.13.3.0', ('string', 'KB')),
+    ( BASE_OID + '.4.1.0', zfs_read),
+    ( BASE_OID + '.4.2.0', zfs_readdir),
+    ( BASE_OID + '.4.3.0', zfs_write),
 ]
+
+i = 1
+for pool in zfs_pools():
+    used, avail = zfs_used_avail(pool)
+    result.append((BASE_OID + '.1.1.' + str(i), ('string', pool)))
+    result.append((BASE_OID + '.1.2.' + str(i), ('gauge', avail)))
+    result.append((BASE_OID + '.1.3.' + str(i), ('gauge', used)))
+    result.append((BASE_OID + '.1.12.' + str(i), ('gauge', avail / 1024)))
+    result.append((BASE_OID + '.1.13.' + str(i), ('gauge', used / 1024)))
+    i += 1
 
 operation = sys.argv[1]
 req_oid = sys.argv[2]
