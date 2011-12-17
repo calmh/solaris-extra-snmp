@@ -32,6 +32,7 @@ ZFS L2ARC hit rate and IO rate. To use, drop the scripts in for example
 /usr/local/bin, add the following to /etc/net-snmp/snmp/snmpd.conf:
 
     pass .1.3.6.1.4.1.25359.1 /usr/local/bin/zfs-snmp
+    pass .1.3.6.1.4.1.25359.2 /usr/local/bin/ipmi-snmp
 
 and restart the net-snmp service. If you don't already use the net-snmp service
 you will need to enable it and set community etc.
