@@ -6,7 +6,10 @@ import sys, commands, re, snmpresponse
 
 def kstat(name):
     output = commands.getoutput("kstat -p " + name)
-    return int(re.split("\s+", output)[1])
+    try:
+        return int(re.split("\s+", output)[1])
+    except:
+        return 0
 
 def zfs_arc_size(oid):
     return ('gauge', kstat("zfs:0:arcstats:size") / 1024) # KB
