@@ -1,0 +1,42 @@
+#!/usr/bin/python
+
+BASE_OID = '.1.3.6.1.4.1.25359.3'
+UPSC = '/usr/local/ups/bin/upsc'
+
+import sys, commands, re, snmpresponse
+
+def list_upses():
+    return commands.getoutput("%s -l"%UPSC).split("\n")
+
+def upsc_val(oid, ups, value):
+    line = commands.getoutput("%s %s | grep %s | head -1"%(UPSC, ups, value))
+    fields = line.split(':')
+    val = fields[1].strip()
+    if re.match('^[0-9]+$', val):
+        return ('gauge', int(val))
+    elif re.match('^[0-9.]+$', val):
+        return ('gauge', int(float(val) * 10))
+    else:
+        return ('string', val)
+
+result = [ ]
+
+i = 1
+for ups in list_upses():
+    result.append((BASE_OID + '.1.' + str(i), ('string', ups)))
+    result.append((BASE_OID + '.2.' + str(i), lambda oid, ups=ups: upsc_val(oid, ups, 'device.model')))
+    result.append((BASE_OID + '.3.' + str(i), lambda oid, ups=ups: upsc_val(oid, ups, 'device.mfr')))
+    result.append((BASE_OID + '.4.' + str(i), lambda oid, ups=ups: upsc_val(oid, ups, 'device.serial')))
+    result.append((BASE_OID + '.5.' + str(i), lambda oid, ups=ups: upsc_val(oid, ups, 'battery.charge')))
+    result.append((BASE_OID + '.6.' + str(i), lambda oid, ups=ups: upsc_val(oid, ups, 'battery.runtime')))
+    result.append((BASE_OID + '.7.' + str(i), lambda oid, ups=ups: upsc_val(oid, ups, 'battery.voltage')))
+    result.append((BASE_OID + '.8.' + str(i), lambda oid, ups=ups: upsc_val(oid, ups, 'battery.voltage.nominal')))
+    result.append((BASE_OID + '.9.' + str(i), lambda oid, ups=ups: upsc_val(oid, ups, 'battery.type')))
+    result.append((BASE_OID + '.10.' + str(i), lambda oid, ups=ups: upsc_val(oid, ups, 'ups.status')))
+    i += 1
+
+operation = sys.argv[1]
+req_oid = sys.argv[2]
+
+snmpresponse.respond_to(operation, req_oid, result)
+

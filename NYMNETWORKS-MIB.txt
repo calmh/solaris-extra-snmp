@@ -9,6 +9,7 @@ nymnetworks	OBJECT IDENTIFIER ::= {enterprises 25359}
 
 zfs	OBJECT IDENTIFIER ::= {nymnetworks 1}
 ipmi	OBJECT IDENTIFIER ::= {nymnetworks 2}
+ups	OBJECT IDENTIFIER ::= {nymnetworks 3}
 
 fs	OBJECT IDENTIFIER ::= {zfs 1}
 
@@ -183,6 +184,87 @@ tempSensorValue OBJECT-TYPE
 	DESCRIPTION
 	         "The current value of the designated temperature sensor."
 	::= {temperature 2}
+
+
+upsId OBJECT-TYPE
+	SYNTAX	DisplayString
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+	         "The UPS identifier."
+	::= {ups 1}
+
+upsModel OBJECT-TYPE
+	SYNTAX	DisplayString
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+	         "The UPS model name."
+	::= {ups 2}
+
+upsManufacturer OBJECT-TYPE
+	SYNTAX	DisplayString
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+	         "The UPS manufacturer name."
+	::= {ups 3}
+
+upsSerial OBJECT-TYPE
+	SYNTAX	DisplayString
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+	         "The UPS serial number."
+	::= {ups 4}
+
+upsBatteryChargePercent OBJECT-TYPE
+	SYNTAX	GAUGE
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+	         "The current battery charge in percent."
+	::= {ups 5}
+
+upsBatteryRuntimeSec OBJECT-TYPE
+	SYNTAX	GAUGE
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+	         "The current remaining runtime in seconds."
+	::= {ups 6}
+
+upsBatteryVoltagedV OBJECT-TYPE
+	SYNTAX	GAUGE
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+	         "The current battery voltage in dV."
+	::= {ups 7}
+
+upsBatteryNominalVoltagedV OBJECT-TYPE
+	SYNTAX	GAUGE
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+	         "The nominal battery voltage in dV."
+	::= {ups 8}
+
+upsBatteryType OBJECT-TYPE
+	SYNTAX	DisplayString
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+	         "The battery type."
+	::= {ups 9}
+
+upsStatus OBJECT-TYPE
+	SYNTAX	DisplayString
+	ACCESS	read-only
+	STATUS	mandatory
+	DESCRIPTION
+	         "The current UPS status string."
+	::= {ups 10}
 
 END
 
