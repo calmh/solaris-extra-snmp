@@ -66,3 +66,8 @@ in for example `/usr/local/bin`, add the following to
 and `svcadm restart net-snmp`. If you don't already use the net-snmp service
 you will need to set community etc at the top of the file and `svcadm enable net-snmp`.
 
+License
+-------
+
+2-Clause BSD
+
