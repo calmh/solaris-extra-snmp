@@ -1,3 +1,11 @@
+# This project is not actively maintained
+
+Issues and pull requests on this repository may not be acted on in a timely
+manner, or at all.  You are of course welcome to use it anyway. You are even
+more welcome to fork it and maintain the results.
+
+![Unmaintained](https://nym.se/img/unmaintained.jpg)
+
 This is a small script to add additional useful variables for SNMP monitoring
 under Solaris. It's known to be compatible with Solaris 11 Express and Solaris 11.
 When deployed, it provides the following additional information:
